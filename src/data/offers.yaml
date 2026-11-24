@@ -1,0 +1,45 @@
+# 案件リンクの一元管理（運用担当：Muse）。
+# スキーマ（変更しない）:
+#   <id>:
+#     name: <製品・サービス名>
+#     asp: <a8|moshimo|valuecommerce|afb|accesstrade|felmat|amazon|rakuten|direct>
+#     url: ""              # 提携後に発行されるアフィリエイトURL
+#     fallbackUrl: <公式サイトURL>
+#     impressionTag: ""
+#     active: false
+# 案件が終了したら削除せず active: false に戻す（記事は公式リンクに切り替わる）。
+#
+# ※ 以下の sample-* は初期データ（offers-additions.yaml の42件）を受け取るまでの仮置き。
+#   `pnpm import:offers <offers-additions.yaml>` で42件を取り込む。
+
+sample-edr:
+  name: サンプルEDR（法人向け）
+  asp: a8
+  url: ""
+  fallbackUrl: https://example.com/edr
+  impressionTag: ""
+  active: false
+
+sample-password-manager:
+  name: サンプルパスワード管理（個人向け）
+  asp: moshimo
+  url: ""
+  fallbackUrl: https://example.com/password-manager
+  impressionTag: ""
+  active: false
+
+sample-broker:
+  name: サンプル証券
+  asp: a8
+  url: ""
+  fallbackUrl: https://example.com/broker
+  impressionTag: ""
+  active: false
+
+sample-broker-b:
+  name: サンプル証券B
+  asp: accesstrade
+  url: ""
+  fallbackUrl: https://example.com/broker-b
+  impressionTag: ""
+  active: false

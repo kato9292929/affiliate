@@ -1,0 +1,10 @@
+---
+import { STOCK_RISK_NOTICE, BASICS_SUPERVISION_NOTICE } from '../config/disclaimers';
+interface Props { basics?: boolean }
+---
+<aside class="box warning stock-notice" aria-label="投資に関する注意事項">
+  <h2>投資に関する注意事項</h2>
+  <ul>{STOCK_RISK_NOTICE.map((t) => <li>{t}</li>)}</ul>
+  {Astro.props.basics && <p><strong>{BASICS_SUPERVISION_NOTICE}</strong></p>}
+</aside>
+<style>ul { margin: 0; padding-left: 1.2em; font-size: var(--font-size-sm); } p { margin: var(--space-2) 0 0; font-size: var(--font-size-sm); }</style>

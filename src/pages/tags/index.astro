@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { allTags } from '../../lib/list-paths';
+import { tagUrl } from '../../lib/content';
+const tags = [...(await allTags()).entries()].sort((a, b) => b[1].length - a[1].length);
+---
+<BaseLayout title="タグ一覧" description="記事のタグ一覧。" contentGroup="tag">
+  <Breadcrumbs slot="breadcrumbs" items={[{ label: 'タグ' }]} />
+  <h1 class="section-title">タグ一覧</h1>
+  <ul class="tags">{tags.map(([t, items]) => <li><a class="tag" href={tagUrl(t)}>#{t}（{items.length}）</a></li>)}</ul>
+</BaseLayout>

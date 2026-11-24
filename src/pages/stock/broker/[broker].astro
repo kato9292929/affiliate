@@ -1,0 +1,39 @@
+---
+// 証券会社ごとのページ：tags に broker:<キー> を持つ記事（セキュリティ設定・ニュース・株式記事）と案件をまとめる
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import ArticleList from '../../../components/ArticleList.astro';
+import OfferButton from '../../../components/OfferButton.astro';
+import PrNotice from '../../../components/PrNotice.astro';
+import StockNotice from '../../../components/StockNotice.astro';
+import { getAllArticles, BROKER_PREFIX, isBrokerTag, brokerKey, type Article } from '../../../lib/content';
+import { BROKERS } from '../../../lib/site-data';
+
+export async function getStaticPaths() {
+  const all = await getAllArticles();
+  const keys = new Set([...Object.keys(BROKERS), ...all.flatMap((e) => e.data.tags.filter(isBrokerTag).map(brokerKey))]);
+  return [...keys].map((broker) => {
+    const items = all.filter((e) => e.data.tags.includes(`${BROKER_PREFIX}${broker}`));
+    return { params: { broker }, props: { items } };
+  });
+}
+const key = Astro.params.broker!;
+const b = BROKERS[key] ?? { key, name: key, offers: [] };
+const { items } = Astro.props as { items: Article[] };
+const security = items.filter((e) => e.collection === 'guides');
+const news = items.filter((e) => e.collection === 'news');
+const stock = items.filter((e) => e.collection === 'stock' || e.collection === 'reviews');
+---
+<BaseLayout title={`${b.name}のセキュリティ設定・ニュース`} description={`${b.name}の二要素認証・パスキーなどのセキュリティ設定、関連ニュース、口座開設の情報をまとめています。`} contentGroup={`stock/broker`}>
+  <Breadcrumbs slot="breadcrumbs" items={[{ label: '株式', href: '/stock/' }, { label: '証券会社別', href: '/stock/broker/' }, { label: b.name }]} />
+  <h1 class="section-title">{b.name}のセキュリティ設定・ニュース</h1>
+  <PrNotice offers={b.offers} />
+  <h2>セキュリティ設定</h2>
+  <ArticleList items={security} ads={false} />
+  <h2>関連ニュース</h2>
+  <ArticleList items={news} ads={false} />
+  <h2>口座・サービスの記事</h2>
+  <ArticleList items={stock} ads={false} />
+  {b.offers.length > 0 && (<><h2>公式サイト</h2>{b.offers.map((id) => <OfferButton id={id} />)}</>)}
+  <StockNotice />
+</BaseLayout>

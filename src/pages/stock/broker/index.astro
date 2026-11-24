@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import { getAllArticles, isBrokerTag, brokerKey, brokerUrl } from '../../../lib/content';
+import { BROKERS } from '../../../lib/site-data';
+const all = await getAllArticles();
+const keys = [...new Set([...Object.keys(BROKERS), ...all.flatMap((e) => e.data.tags.filter(isBrokerTag).map(brokerKey))])];
+---
+<BaseLayout title="証券会社別のセキュリティ設定" description="証券会社ごとの二要素認証・パスキー対応・関連ニュースの一覧。" contentGroup="stock/broker">
+  <Breadcrumbs slot="breadcrumbs" items={[{ label: '株式', href: '/stock/' }, { label: '証券会社別' }]} />
+  <h1 class="section-title">証券会社別のセキュリティ設定</h1>
+  <ul>{keys.map((k) => <li><a href={brokerUrl(k)}>{BROKERS[k]?.name ?? k}</a></li>)}</ul>
+</BaseLayout>

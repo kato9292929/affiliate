@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { SUPERVISORS } from '../../lib/site-data';
+---
+<BaseLayout title="監修者" description="当サイトの記事の監修者と監修範囲。" contentGroup="supervisor">
+  <Breadcrumbs slot="breadcrumbs" items={[{ label: '監修者' }]} />
+  <h1 class="section-title">監修者</h1>
+  {Object.values(SUPERVISORS).map((s) => (
+    <section class="box">
+      <h2><a href={`/supervisors/${s.id}/`}>{s.name}</a>（{s.title}）</h2>
+      {s.scope && <p>{s.scope}</p>}
+    </section>
+  ))}
+</BaseLayout>

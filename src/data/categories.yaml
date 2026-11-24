@@ -1,0 +1,123 @@
+# カテゴリ定義（コレクションごと）。記事の category はここのキーでなければビルドエラーになる。
+#   label:       表示名
+#   description: カテゴリページの説明（meta description にも使う）
+#   group:       ナビゲーションでのまとまり（任意）
+#   audience:    corporate（法人）/ personal（個人）/ both。ニュース→対策記事→案件の導線に使う
+#   related:     関連づけるカテゴリ（{ コレクション: [キー, ...] }）。ニュース下の関連リンク枠に使う
+news:
+  leak:
+    label: 情報漏えい
+    description: 企業・団体の情報漏えい、不正アクセスによる個人情報流出のニュース。
+    audience: both
+    related:
+      guides: [email-security, identity-mfa, vulnerability-assessment, personal-password]
+      reviews: [corporate-security, personal-security]
+  ransomware-damage:
+    label: ランサムウェア被害・注意喚起
+    description: ランサムウェアの被害発表、公的機関からの注意喚起。
+    audience: corporate
+    related:
+      guides: [edr, vulnerability-assessment, phishing-training]
+      reviews: [corporate-security]
+  ransomware-groups:
+    label: ランサムウェアグループ動向・脅威アクター
+    description: ランサムウェアグループや脅威アクターの動向。
+    audience: corporate
+    related:
+      guides: [edr, glossary]
+      reviews: [corporate-security]
+  vulnerability:
+    label: 脆弱性
+    description: 製品・サービスの脆弱性情報と対応状況。
+    audience: both
+    related:
+      guides: [vulnerability-assessment, personal-antivirus]
+      reviews: [corporate-security, personal-security]
+  general:
+    label: 情報セキュリティ全般
+    description: 法制度・ガイドライン・業界動向など情報セキュリティ全般のニュース。
+    audience: both
+    related:
+      guides: [glossary, security-x-stock]
+
+guides:
+  glossary:
+    label: セキュリティ用語
+    description: セキュリティ用語の解説。
+    group: セキュリティ用語
+    audience: both
+  edr:
+    label: EDR比較・選び方
+    description: EDR（エンドポイント検知・対応）の比較と選び方。
+    group: 対策の選び方
+    audience: corporate
+  email-security:
+    label: メールセキュリティ
+    description: メールセキュリティ製品・サービスの選び方。
+    group: 対策の選び方
+    audience: corporate
+  vulnerability-assessment:
+    label: 脆弱性診断
+    description: 脆弱性診断サービスの選び方。
+    group: 対策の選び方
+    audience: corporate
+  phishing-training:
+    label: 標的型メール訓練
+    description: 標的型メール訓練サービスの選び方。
+    group: 対策の選び方
+    audience: corporate
+  identity-mfa:
+    label: ID管理・MFA
+    description: ID管理・多要素認証（MFA）の選び方。
+    group: 対策の選び方
+    audience: corporate
+  personal-vpn:
+    label: VPN
+    description: 個人向けVPNの選び方。
+    group: 個人向け対策
+    audience: personal
+  personal-antivirus:
+    label: ウイルス対策
+    description: 個人向けウイルス対策ソフトの選び方。
+    group: 個人向け対策
+    audience: personal
+  personal-password:
+    label: パスワード管理
+    description: パスワード管理ツールの選び方。
+    group: 個人向け対策
+    audience: personal
+  security-x-stock:
+    label: セキュリティ×株式
+    description: 証券口座の乗っ取り対策、各社の多要素認証・パスキー対応、不正アクセス時の手順など。
+    group: セキュリティ×株式
+    audience: personal
+    related:
+      stock: [brokerage-account]
+
+reviews:
+  corporate-security:
+    label: 法人向けセキュリティ製品
+    description: 法人向けセキュリティ製品・サービスの紹介。
+    audience: corporate
+  personal-security:
+    label: 個人向けセキュリティ製品
+    description: 個人向けセキュリティ製品の紹介。
+    audience: personal
+
+stock:
+  brokerage-account:
+    label: 証券口座
+    description: 証券口座の選び方・比較。
+    audience: personal
+  investment-app:
+    label: 投資アプリ
+    description: 投資アプリの紹介。
+    audience: personal
+  info-service:
+    label: 情報サービス
+    description: 投資情報サービスの紹介。
+    audience: personal
+  basics:
+    label: 投資の基礎
+    description: 投資の制度・仕組みの一般的な解説。
+    audience: personal

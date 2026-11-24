@@ -1,0 +1,13 @@
+---
+// 記事カード・記事冒頭に出す監修者の1行表示
+import { SUPERVISORS } from '../lib/site-data';
+interface Props { id: string; link?: boolean }
+const s = SUPERVISORS[Astro.props.id];
+const link = Astro.props.link ?? true;
+---
+{s && (
+  <span class="supervisor-line">
+    監修：{link ? <a href={`/supervisors/${s.id}/`}>{s.name}</a> : s.name}<span class="sv-title">（{s.title}）</span>
+  </span>
+)}
+<style>.sv-title { color: var(--color-text-muted); }</style>

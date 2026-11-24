@@ -1,0 +1,55 @@
+---
+// 比較表。データは src/data/comparisons/<data>.yaml。
+// 登録番号（affiliate-programs.csv の registration 列）と情報基準日の列は必ず出す。報酬は出さない。
+import { comparison, getOffer, registration } from '../lib/site-data';
+import Offer from './Offer.astro';
+interface Props { data: string; caption?: string }
+const d = comparison(Astro.props.data);
+const extra = d.columns ?? [];
+const security = d.type === 'security';
+const fmtDate = (s: string) => s.replace(/^(\d{4})-(\d{2})-(\d{2})$/, (_, y, m, dd) => `${y}年${Number(m)}月${Number(dd)}日`);
+---
+<figure class="comparison">
+  <figcaption>{Astro.props.caption ?? d.title}（情報基準日：{fmtDate(String(d.infoDate))}）</figcaption>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">名称</th>
+          {security && <th scope="col">多要素認証の方式</th>}
+          {security && <th scope="col">パスキー対応</th>}
+          {security && <th scope="col">多要素認証の必須化</th>}
+          {extra.map((c) => <th scope="col">{c.label}</th>)}
+          <th scope="col">登録番号</th>
+          <th scope="col">情報基準日</th>
+        </tr>
+      </thead>
+      <tbody>
+        {d.rows.map((r) => {
+          const o = getOffer(r.offer);
+          return (
+            <tr>
+              <th scope="row"><Offer id={o.id}>{r.name ?? o.name}</Offer></th>
+              {security && <td>{r.mfa ?? '—'}</td>}
+              {security && <td>{r.passkey ?? '—'}</td>}
+              {security && <td>{r.mfaRequired ?? '—'}</td>}
+              {extra.map((c) => <td>{r.values?.[c.key] ?? '—'}</td>)}
+              <td class="reg">{registration(o.id) || '—'}</td>
+              <td>{fmtDate(String(r.infoDate ?? d.infoDate))}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">各社の情報は情報基準日時点のものです。最新の内容は各社の公式サイトでご確認ください。</p>
+</figure>
+<style>
+  .comparison { margin: var(--space-5) 0; }
+  figcaption { font-weight: 700; margin-bottom: var(--space-2); }
+  table { border-collapse: collapse; width: 100%; font-size: var(--font-size-sm); min-width: 640px; }
+  th, td { border: 1px solid var(--color-border); padding: var(--space-2); text-align: left; vertical-align: top; }
+  thead th { background: var(--color-surface-strong); }
+  .reg { font-size: var(--font-size-xs); }
+  .note { font-size: var(--font-size-xs); color: var(--color-text-muted); }
+</style>

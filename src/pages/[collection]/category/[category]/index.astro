@@ -1,0 +1,12 @@
+---
+import ListPage from '../../../../components/ListPage.astro';
+import { categoryPaths, COLLECTION_LABELS, CATEGORIES, type ArticleCollection, type ListProps } from '../../../../lib/list-paths';
+export const getStaticPaths = () => categoryPaths(true);
+const col = Astro.params.collection as ArticleCollection;
+const key = Astro.params.category!;
+const cat = CATEGORIES[col][key];
+const p = Astro.props as ListProps;
+---
+<ListPage title={cat.label} description={cat.description ?? `${cat.label}の記事一覧。`}
+  crumbs={[{ label: COLLECTION_LABELS[col], href: `/${col}/` }, { label: cat.label }]}
+  {...p} base={`/${col}/category/${key}/`} contentGroup={`${col}/${key}`} />

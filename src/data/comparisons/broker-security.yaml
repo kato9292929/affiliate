@@ -1,0 +1,19 @@
+# 比較表データ（<ComparisonTable data="broker-security" /> で使う）
+# 登録番号は affiliate-programs.csv の registration 列から自動で引く（ここには書かない）。
+# 報酬・条件はサイトに出さない。
+title: 証券会社のセキュリティ比較（多要素認証・パスキー対応）
+type: security
+infoDate: "2026-11-01"
+columns:
+  - { key: loginAlert, label: ログイン通知 }
+rows:
+  - offer: sample-broker
+    mfa: SMS / 認証アプリ
+    passkey: 対応
+    mfaRequired: ログイン時必須
+    values: { loginAlert: あり }
+  - offer: sample-broker-b
+    mfa: メール
+    passkey: 未対応
+    mfaRequired: 任意
+    values: { loginAlert: あり }

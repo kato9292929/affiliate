@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleList from '../components/ArticleList.astro';
+import { SITE } from '../../site.config';
+import { getArticles } from '../lib/content';
+import { COLLECTION_LABELS, ARTICLE_COLLECTIONS } from '../lib/site-data';
+
+const sections = await Promise.all(
+  ARTICLE_COLLECTIONS.map(async (c) => ({ c, items: (await getArticles(c)).slice(0, c === 'news' ? 10 : 5) })),
+);
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE.name,
+    url: new URL('/', Astro.site).href,
+    inLanguage: 'ja',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${new URL('/search/', Astro.site).href}?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE.publisher.name,
+    url: SITE.publisher.url,
+  },
+];
+---
+<BaseLayout title={`${SITE.name} | セキュリティニュースと対策`} fullTitle description={SITE.description} jsonLd={jsonLd} contentGroup="top">
+  <h1 class="visually-hidden">{SITE.name}</h1>
+  {sections.map(({ c, items }) => (
+    <section>
+      <h2 class="section-title">{c === 'news' ? '最新ニュース' : COLLECTION_LABELS[c]}</h2>
+      <ArticleList items={items} />
+      <p class="more"><a href={`/${c}/`}>{COLLECTION_LABELS[c]}の一覧へ</a></p>
+    </section>
+  ))}
+</BaseLayout>
+<style>.more { text-align: right; font-size: var(--font-size-sm); }</style>

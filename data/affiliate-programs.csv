@@ -1,0 +1,5 @@
+id,name,asp,category,registration,reward,conditions,status,notes
+sample-edr,サンプルEDR（法人向け）,a8,corporate-security,,要ログイン確認,,未提携,仮置き
+sample-password-manager,サンプルパスワード管理（個人向け）,moshimo,personal-security,,要ログイン確認,,未提携,仮置き
+sample-broker,サンプル証券,a8,stock,関東財務局長（金商）第00000号（サンプル）,要ログイン確認,,未提携,仮置き・登録番号はダミー
+sample-broker-b,サンプル証券B,accesstrade,stock,関東財務局長（金商）第00001号（サンプル）,要ログイン確認,,未提携,仮置き・登録番号はダミー

@@ -1,0 +1,15 @@
+---
+import ListPage from '../../components/ListPage.astro';
+import { collectionPaths, COLLECTION_LABELS, type ArticleCollection, type ListProps } from '../../lib/list-paths';
+export const getStaticPaths = () => collectionPaths(true);
+const col = Astro.params.collection as ArticleCollection;
+const p = Astro.props as ListProps;
+const descriptions: Record<ArticleCollection, string> = {
+  news: '情報漏えい・ランサムウェア・脆弱性などのセキュリティニュース。',
+  guides: 'セキュリティ用語、法人・個人のセキュリティ対策の選び方、証券口座のセキュリティの解説。',
+  reviews: '法人・個人向けのセキュリティ製品・サービスの紹介。',
+  stock: '証券口座・投資アプリ・情報サービス・投資の基礎。',
+};
+---
+<ListPage title={COLLECTION_LABELS[col]} description={descriptions[col]} crumbs={[{ label: COLLECTION_LABELS[col] }]}
+  {...p} base={`/${col}/`} contentGroup={col} />

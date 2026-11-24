@@ -1,0 +1,35 @@
+# 監修者。記事の supervisor はここのキーでなければビルドエラーになる。
+# 外部の監修者を足すときは、同じ形でエントリを追加する（type: person）。
+#   name:        表示名
+#   title:       肩書（記事・カードに表示）
+#   type:        organization / person
+#   affiliation: 所属
+#   url:         所属・本人の公式URL（任意）
+#   specialties: 専門領域
+#   scope:       監修範囲の説明（記事末尾とプロフィールに表示）
+#   notice:      記事に必ず添える注記（任意）
+x402:
+  name: x402 Inc.
+  title: セキュリティ事業者としての監修
+  type: organization
+  affiliation: x402 Inc.
+  url: https://x402jp.com
+  specialties:
+    - 情報セキュリティ
+    - サイバー攻撃・脅威動向
+    - 証券口座・金融サービスのアカウントセキュリティ
+  scope: >-
+    セキュリティ事業者として、セキュリティ分野の記事およびセキュリティ×株式の記事の技術的な内容を監修しています。
+    金融商品の推奨・投資助言は監修の範囲に含みません。
+x402-basics:
+  name: x402 Inc.
+  title: 制度・仕組みの一般的な解説の監修
+  type: organization
+  affiliation: x402 Inc.
+  url: https://x402jp.com
+  specialties:
+    - 投資に関する制度・仕組みの一般的な解説
+  scope: >-
+    投資の基礎記事について、制度・仕組みの一般的な解説に限って内容を確認しています。
+    個別の金融商品の推奨・投資助言は行っていません。
+  notice: 監修は制度・仕組みの一般的な解説に限ったもので、投資の推奨・助言ではありません。

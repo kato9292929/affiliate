@@ -1,0 +1,13 @@
+# Tier 2（ヘッドキーワード）用の汎用比較表テンプレート。初期のページでは使っていない。
+title: ネット証券の比較
+type: general
+infoDate: "2026-11-01"
+columns:
+  - { key: usStockFee, label: 米国株手数料 }
+  - { key: fractional, label: 単元未満株 }
+  - { key: creditCard, label: クレカ積立 }
+rows:
+  - offer: sample-broker
+    values: { usStockFee: 約定代金の0.495%（サンプル）, fractional: 対応, creditCard: 対応 }
+  - offer: sample-broker-b
+    values: { usStockFee: 約定代金の0.45%（サンプル）, fractional: 未対応, creditCard: 対応 }

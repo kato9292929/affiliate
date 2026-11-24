@@ -1,0 +1,13 @@
+---
+// 広告枠。publisher ID または該当スロットが未設定なら何も描画しない（空の枠も出さない）。
+import { ADS, slotFor } from '../config/ads';
+interface Props { position: 'articleTop' | 'sidebar' | 'inList' }
+const slot = slotFor(Astro.props.position);
+---
+{slot && (
+  <div class={`ad ad-${Astro.props.position}`} data-ad-position={Astro.props.position}>
+    <span class="ad-label">広告</span>
+    <ins class="adsbygoogle" style="display:block" data-ad-client={ADS.publisherId} data-ad-slot={slot} data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script is:inline>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+)}

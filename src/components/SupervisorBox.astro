@@ -1,0 +1,18 @@
+---
+import { SUPERVISORS } from '../lib/site-data';
+interface Props { id: string }
+const s = SUPERVISORS[Astro.props.id];
+---
+{s && (
+  <aside class="box supervisor-box" aria-label="監修者">
+    <h2>この記事の監修</h2>
+    <p class="name"><a href={`/supervisors/${s.id}/`}>{s.name}</a>（{s.title}）</p>
+    {s.scope && <p class="scope">{s.scope}</p>}
+    {s.notice && <p class="sv-notice"><strong>{s.notice}</strong></p>}
+  </aside>
+)}
+<style>
+  .name { font-weight: 700; margin: 0 0 var(--space-2); }
+  .scope { font-size: var(--font-size-sm); margin: 0; color: var(--color-text-muted); }
+  .sv-notice { font-size: var(--font-size-sm); margin: var(--space-2) 0 0; }
+</style>

@@ -1,0 +1,23 @@
+---
+import type { Article } from '../lib/content';
+import { relatedFor, articleUrl } from '../lib/content';
+interface Props { entry: Article }
+const { guides, products } = await relatedFor(Astro.props.entry);
+---
+{(guides.length > 0 || products.length > 0) && (
+  <section class="related" aria-label="関連する対策・比較">
+    {guides.length > 0 && (
+      <div class="box">
+        <h2>このニュースに関連する対策</h2>
+        <ul>{guides.map((g) => <li><a href={articleUrl(g)}>{g.data.title}</a></li>)}</ul>
+      </div>
+    )}
+    {products.length > 0 && (
+      <div class="box">
+        <h2>比較表・製品・サービス</h2>
+        <ul>{products.map((p) => <li><a href={articleUrl(p)}>{p.data.title}</a></li>)}</ul>
+      </div>
+    )}
+  </section>
+)}
+<style>ul { margin: 0; padding-left: 1.2em; }</style>

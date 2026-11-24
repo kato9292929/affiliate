@@ -1,0 +1,15 @@
+---
+import StaticPage from '../layouts/StaticPage.astro';
+import { SITE } from '../../site.config';
+---
+<StaticPage id="about">
+  <table class="operator">
+    <tbody>
+      <tr><th scope="row">サイト名</th><td>{SITE.name}</td></tr>
+      <tr><th scope="row">運営会社</th><td>{SITE.publisher.name}</td></tr>
+      <tr><th scope="row">公式サイト</th><td><a href={SITE.publisher.url} rel="noopener">{SITE.publisher.url}</a></td></tr>
+      {SITE.publisher.email && <tr><th scope="row">お問い合わせ</th><td><a href={`mailto:${SITE.publisher.email}`}>{SITE.publisher.email}</a></td></tr>}
+      <tr><th scope="row">監修</th><td><a href="/supervisors/">監修者と監修範囲</a></td></tr>
+    </tbody>
+  </table>
+</StaticPage>

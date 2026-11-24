@@ -1,0 +1,42 @@
+---
+import { SITE } from '../../site.config';
+import { COLLECTION_LABELS, CATEGORIES } from '../lib/site-data';
+const path = Astro.url.pathname;
+const items = [
+  { href: '/news/', label: COLLECTION_LABELS.news },
+  { href: '/guides/', label: COLLECTION_LABELS.guides },
+  { href: '/guides/category/security-x-stock/', label: CATEGORIES.guides['security-x-stock']?.label ?? 'セキュリティ×株式' },
+  { href: '/reviews/', label: COLLECTION_LABELS.reviews },
+  { href: '/stock/', label: COLLECTION_LABELS.stock },
+];
+---
+<header class="site-header">
+  <div class="container bar">
+    <a class="logo" href="/">{SITE.name}</a>
+    <a class="search-link" href="/search/">検索</a>
+  </div>
+  <nav class="global-nav" aria-label="メインメニュー">
+    <ul class="container">
+      {items.map((i) => (
+        <li><a href={i.href} aria-current={path.startsWith(i.href) ? 'page' : undefined}>{i.label}</a></li>
+      ))}
+    </ul>
+  </nav>
+  <nav class="sub-nav" aria-label="ニュースのカテゴリ">
+    <ul class="container">
+      {Object.entries(CATEGORIES.news).map(([k, c]) => <li><a href={`/news/category/${k}/`}>{c.label}</a></li>)}
+    </ul>
+  </nav>
+</header>
+<style>
+  .site-header { border-bottom: 1px solid var(--color-border); background: var(--color-bg); }
+  .bar { display: flex; align-items: center; justify-content: space-between; min-height: 56px; }
+  .logo { font-weight: 800; font-size: var(--font-size-lg); color: var(--color-text); text-decoration: none; }
+  .search-link, .search-link:visited { color: var(--color-text); font-size: var(--font-size-sm); }
+  ul { list-style: none; display: flex; gap: var(--space-1) var(--space-4); margin: 0 auto; overflow-x: auto; white-space: nowrap; }
+  .global-nav { background: var(--color-primary); }
+  .global-nav a, .global-nav a:visited { color: var(--color-on-primary); text-decoration: none; display: block; padding: var(--space-2) 0; font-weight: 700; font-size: var(--font-size-sm); }
+  .global-nav a[aria-current] { text-decoration: underline; text-underline-offset: 6px; }
+  .sub-nav { background: var(--color-surface); }
+  .sub-nav a, .sub-nav a:visited { color: var(--color-text); text-decoration: none; display: block; padding: var(--space-2) 0; font-size: var(--font-size-xs); }
+</style>

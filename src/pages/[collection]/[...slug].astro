@@ -1,0 +1,19 @@
+---
+import { render } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import Offer from '../../components/Offer.astro';
+import OfferButton from '../../components/OfferButton.astro';
+import ComparisonTable from '../../components/ComparisonTable.astro';
+import { getArticles, type Article } from '../../lib/content';
+import { ARTICLE_COLLECTIONS } from '../../lib/site-data';
+
+export async function getStaticPaths() {
+  const all = (await Promise.all(ARTICLE_COLLECTIONS.map((c) => getArticles(c)))).flat();
+  return all.map((entry) => ({ params: { collection: entry.collection, slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props as { entry: Article };
+const { Content } = await render(entry);
+---
+<ArticleLayout entry={entry}>
+  <Content components={{ Offer, OfferButton, ComparisonTable }} />
+</ArticleLayout>

@@ -1,0 +1,7 @@
+---
+// 広告表記。記事の offers に active な案件が1つでもあれば自動で出す（設定で外すことはできない）。
+import { hasActiveOffer } from '../lib/site-data';
+import { PR_NOTICE } from '../config/disclaimers';
+interface Props { offers: string[] }
+---
+{hasActiveOffer(Astro.props.offers) && <p class="pr-notice" role="note">{PR_NOTICE}</p>}

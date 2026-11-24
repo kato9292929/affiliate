@@ -1,0 +1,19 @@
+---
+import { getEntry, render } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { formatDate } from '../lib/content';
+interface Props { id: string }
+const entry = await getEntry('pages', Astro.props.id);
+if (!entry) throw new Error(`src/content/pages/${Astro.props.id}.md がありません`);
+const { Content } = await render(entry);
+---
+<BaseLayout title={entry.data.title} description={entry.data.description} contentGroup="page">
+  <Breadcrumbs slot="breadcrumbs" items={[{ label: entry.data.title }]} />
+  <article class="prose">
+    <h1>{entry.data.title}</h1>
+    <slot />
+    <Content />
+    {entry.data.updatedAt && <p class="meta">最終更新日：{formatDate(entry.data.updatedAt)}</p>}
+  </article>
+</BaseLayout>

@@ -1,0 +1,19 @@
+---
+// 案件リンク（本文中のテキストリンク）。記事内の案件リンクはこのコンポーネントと OfferButton だけで描画する。
+// active: true かつ url あり → アフィリエイトURL（rel="sponsored noopener"）
+// それ以外               → fallbackUrl（通常の公式リンク）
+import { getOffer, isAffiliate } from '../lib/site-data';
+import Impression from './OfferImpression.astro';
+interface Props { id: string; class?: string }
+const o = getOffer(Astro.props.id);
+const aff = isAffiliate(o);
+const hasSlot = Astro.slots.has('default');
+---
+<a
+  href={aff ? o.url : o.fallbackUrl}
+  class:list={['offer-link', Astro.props.class]}
+  rel={aff ? 'sponsored noopener' : 'noopener'}
+  target="_blank"
+  data-offer-id={o.id}
+  data-offer-asp={aff ? o.asp : 'official'}
+>{hasSlot ? <slot /> : o.name}</a>{aff && <Impression offer={o} />}

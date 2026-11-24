@@ -1,0 +1,22 @@
+---
+import AdSlot from './AdSlot.astro';
+import { CATEGORIES, COLLECTION_LABELS, type ArticleCollection } from '../lib/site-data';
+const groups: ArticleCollection[] = ['news', 'guides', 'stock'];
+---
+<aside class="sidebar" aria-label="サイドバー">
+  <AdSlot position="sidebar" />
+  {groups.map((c) => (
+    <section class="side-section">
+      <h2>{COLLECTION_LABELS[c]}</h2>
+      <ul>
+        {Object.entries(CATEGORIES[c]).map(([k, cat]) => <li><a href={`/${c}/category/${k}/`}>{cat.label}</a></li>)}
+      </ul>
+    </section>
+  ))}
+</aside>
+<style>
+  .side-section { margin-bottom: var(--space-5); }
+  h2 { font-size: var(--font-size-base); border-bottom: 2px solid var(--color-primary); padding-bottom: var(--space-1); }
+  ul { list-style: none; padding: 0; margin: 0; font-size: var(--font-size-sm); }
+  li { padding: var(--space-1) 0; border-bottom: 1px dashed var(--color-border); }
+</style>

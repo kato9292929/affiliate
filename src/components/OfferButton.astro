@@ -1,0 +1,19 @@
+---
+import { getOffer, isAffiliate } from '../lib/site-data';
+import Impression from './OfferImpression.astro';
+interface Props { id: string; label?: string }
+const o = getOffer(Astro.props.id);
+const aff = isAffiliate(o);
+const label = Astro.props.label ?? `${o.name}の公式サイトを見る`;
+---
+<p class="offer-button">
+  <a
+    href={aff ? o.url : o.fallbackUrl}
+    class="btn btn-cta"
+    rel={aff ? 'sponsored noopener' : 'noopener'}
+    target="_blank"
+    data-offer-id={o.id}
+    data-offer-asp={aff ? o.asp : 'official'}
+  >{label}</a>{aff && <Impression offer={o} />}
+</p>
+<style>.offer-button { text-align: center; margin: var(--space-5) 0; } .offer-button a { min-width: 260px; }</style>

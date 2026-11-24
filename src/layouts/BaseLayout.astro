@@ -1,0 +1,78 @@
+---
+import '../styles/global.css';
+import Seo from '../components/Seo.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Sidebar from '../components/Sidebar.astro';
+import { SITE } from '../../site.config';
+import { GA4_ID } from '../config/analytics';
+import { ADS, isAdsEnabled } from '../config/ads';
+
+interface Props {
+  title: string;
+  description: string;
+  fullTitle?: boolean;
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  jsonLd?: Record<string, unknown>[];
+  /** GA4 のコンテンツグループ（コレクション/カテゴリ） */
+  contentGroup?: string;
+  sidebar?: boolean;
+}
+const { sidebar = true, contentGroup = 'other', ...seo } = Astro.props;
+---
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={SITE.name} href="/rss.xml" />
+    <Seo {...seo} />
+    {GA4_ID && (
+      <>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`}></script>
+        <script is:inline define:vars={{ id: GA4_ID, contentGroup }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() { dataLayer.push(arguments); }
+          window.gtag = gtag;
+          gtag('js', new Date());
+          gtag('config', id, { content_group: contentGroup });
+          // 案件リンクのクリック計測
+          document.addEventListener('click', function (ev) {
+            var a = ev.target && ev.target.closest && ev.target.closest('a[data-offer-id]');
+            if (!a) return;
+            gtag('event', 'affiliate_click', {
+              offer_id: a.getAttribute('data-offer-id'),
+              asp: a.getAttribute('data-offer-asp'),
+              page_path: location.pathname,
+              content_group: contentGroup,
+            });
+          });
+        </script>
+      </>
+    )}
+    {isAdsEnabled() && (
+      <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADS.publisherId}`} crossorigin="anonymous"></script>
+    )}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">本文へスキップ</a>
+    <Header />
+    <div class="container">
+      <slot name="breadcrumbs" />
+      <div class={sidebar ? 'layout' : 'layout single'}>
+        <main id="main" data-pagefind-body={Astro.props.type === 'article' ? '' : undefined}>
+          <slot />
+        </main>
+        {sidebar && <Sidebar />}
+      </div>
+    </div>
+    <Footer />
+  </body>
+</html>
+<style>.single { grid-template-columns: minmax(0, 1fr) !important; }</style>

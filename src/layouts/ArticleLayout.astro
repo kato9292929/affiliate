@@ -1,0 +1,114 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import SupervisorLine from '../components/SupervisorLine.astro';
+import SupervisorBox from '../components/SupervisorBox.astro';
+import PrNotice from '../components/PrNotice.astro';
+import StockNotice from '../components/StockNotice.astro';
+import NewsSummary from '../components/NewsSummary.astro';
+import SourceList from '../components/SourceList.astro';
+import RelatedLinks from '../components/RelatedLinks.astro';
+import AdSlot from '../components/AdSlot.astro';
+import { SITE } from '../../site.config';
+import { type Article, articleUrl, categoryUrl, formatDate, tagUrl, isBrokerTag, brokerKey } from '../lib/content';
+import { category, COLLECTION_LABELS, OFFERS, SUPERVISORS, BROKERS, type ArticleCollection } from '../lib/site-data';
+import { BASICS_CATEGORIES } from '../config/disclaimers';
+
+interface Props { entry: Article }
+const { entry } = Astro.props;
+const d = entry.data;
+const col = entry.collection as ArticleCollection;
+const cat = category(col, d.category);
+const sv = SUPERVISORS[d.supervisor];
+const url = new URL(articleUrl(entry), Astro.site).href;
+const isStock = col === 'stock';
+const isBasics = isStock && BASICS_CATEGORIES.includes(d.category);
+const news = col === 'news' ? (d as Article['data'] & { organization?: string; affectedCount?: string; leakedItems?: string[]; cause?: string }) : null;
+const ogImage = d.image ?? `/og/${col}/${entry.id}.png`;
+
+const publisherLd = { '@type': 'Organization', name: SITE.publisher.name, url: SITE.publisher.url };
+const articleLd: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': col === 'news' ? 'NewsArticle' : 'Article',
+  headline: d.title,
+  description: d.description,
+  datePublished: d.publishedAt.toISOString(),
+  dateModified: (d.updatedAt ?? d.publishedAt).toISOString(),
+  mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+  url,
+  image: [new URL(ogImage, Astro.site).href],
+  author: d.author ? { '@type': 'Person', name: d.author } : publisherLd,
+  publisher: publisherLd,
+  articleSection: cat.label,
+  keywords: d.tags.filter((t) => !isBrokerTag(t)).join(','),
+  inLanguage: 'ja',
+};
+const jsonLd: Record<string, unknown>[] = [articleLd];
+if (d.isComparison && d.offers.length) {
+  jsonLd.push({
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: d.title,
+    itemListElement: d.offers.filter((id) => OFFERS[id]).map((id, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: OFFERS[id].name,
+      url: OFFERS[id].fallbackUrl,
+    })),
+  });
+}
+const tagLabel = (t: string) => (isBrokerTag(t) ? BROKERS[brokerKey(t)]?.name ?? brokerKey(t) : t);
+---
+<BaseLayout
+  title={d.title}
+  description={d.description}
+  type="article"
+  image={ogImage}
+  publishedTime={d.publishedAt}
+  modifiedTime={d.updatedAt}
+  jsonLd={jsonLd}
+  contentGroup={`${col}/${d.category}`}
+>
+  <Breadcrumbs slot="breadcrumbs" items={[
+    { label: COLLECTION_LABELS[col], href: `/${col}/` },
+    { label: cat.label, href: categoryUrl(col, d.category) },
+    { label: d.title },
+  ]} />
+  <article class="article">
+    <header>
+      <a class="badge" href={categoryUrl(col, d.category)}>{cat.label}</a>
+      <h1>{d.title}</h1>
+      <PrNotice offers={d.offers} />
+      <div class="meta">
+        <span>公開日：<time datetime={d.publishedAt.toISOString()}>{formatDate(d.publishedAt)}</time></span>
+        {d.updatedAt && <span>更新日：<time datetime={d.updatedAt.toISOString()}>{formatDate(d.updatedAt)}</time></span>}
+        {d.infoDate && <span>情報基準日：<time datetime={d.infoDate.toISOString()}>{formatDate(d.infoDate)}</time></span>}
+        {d.author && <span>執筆：{d.author}</span>}
+      </div>
+      <p class="meta sv"><SupervisorLine id={d.supervisor} /></p>
+      {sv?.notice && <p class="box notice sv-notice">{sv.notice}</p>}
+    </header>
+
+    {news && <NewsSummary organization={news.organization} affectedCount={news.affectedCount} leakedItems={news.leakedItems} cause={news.cause} />}
+    <AdSlot position="articleTop" />
+
+    <div class="prose">
+      <slot />
+    </div>
+
+    {isStock && <StockNotice basics={isBasics} />}
+    <SourceList urls={d.sourceUrls} />
+    {d.tags.length > 0 && (
+      <ul class="tags" aria-label="タグ">
+        {d.tags.map((t) => <li><a class="tag" href={tagUrl(t)}>#{tagLabel(t)}</a></li>)}
+      </ul>
+    )}
+    <SupervisorBox id={d.supervisor} />
+    {col === 'news' && <RelatedLinks entry={entry} />}
+  </article>
+</BaseLayout>
+<style>
+  h1 { font-size: var(--font-size-2xl); margin: var(--space-3) 0; }
+  .sv { margin: var(--space-2) 0 0; }
+  .sv-notice { font-size: var(--font-size-sm); margin: var(--space-3) 0; padding: var(--space-2) var(--space-3); }
+</style>

@@ -1,0 +1,10 @@
+---
+interface Props { urls: string[] }
+---
+{Astro.props.urls.length > 0 && (
+  <section class="box sources" aria-label="出典">
+    <h2>出典・参考情報</h2>
+    <ul>{Astro.props.urls.map((u) => <li><a href={u} rel="noopener" target="_blank">{u}</a></li>)}</ul>
+  </section>
+)}
+<style>ul { margin: 0; padding-left: 1.2em; font-size: var(--font-size-sm); word-break: break-all; }</style>

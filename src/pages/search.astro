@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+---
+<BaseLayout title="サイト内検索" description="サイト内の記事を検索します。" noindex contentGroup="search">
+  <Breadcrumbs slot="breadcrumbs" items={[{ label: '検索' }]} />
+  <h1 class="section-title">サイト内検索</h1>
+  <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+  <div id="search"></div>
+  <noscript>検索にはJavaScriptが必要です。</noscript>
+  <script is:inline src="/pagefind/pagefind-ui.js"></script>
+  <script is:inline>
+    window.addEventListener('DOMContentLoaded', function () {
+      if (!window.PagefindUI) {
+        document.getElementById('search').textContent = '検索インデックスは本番ビルド（pnpm build）で生成されます。';
+        return;
+      }
+      var ui = new PagefindUI({ element: '#search', showSubResults: true, translations: { placeholder: 'キーワードを入力' } });
+      var q = new URLSearchParams(location.search).get('q');
+      if (q) ui.triggerSearch(q);
+    });
+  </script>
+</BaseLayout>

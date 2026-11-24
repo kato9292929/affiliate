@@ -1,0 +1,33 @@
+---
+import type { Article } from '../lib/content';
+import { articleUrl, categoryUrl, formatDate } from '../lib/content';
+import { category, COLLECTION_LABELS, type ArticleCollection } from '../lib/site-data';
+import SupervisorLine from './SupervisorLine.astro';
+interface Props { entry: Article; showCollection?: boolean; level?: 2 | 3 }
+const { entry, showCollection = false, level = 3 } = Astro.props;
+const H = level === 2 ? 'h2' : 'h3';
+const col = entry.collection as ArticleCollection;
+const cat = category(col, entry.data.category);
+---
+<article class="card">
+  <div class="card-meta">
+    {showCollection && <span class={`col col-${col}`}>{COLLECTION_LABELS[col]}</span>}
+    <a class="badge" href={categoryUrl(col, entry.data.category)}>{cat.label}</a>
+    <time datetime={entry.data.publishedAt.toISOString()}>{formatDate(entry.data.publishedAt)}</time>
+  </div>
+  <H class="card-title"><a href={articleUrl(entry)}>{entry.data.title}</a></H>
+  <p class="card-desc">{entry.data.description}</p>
+  <p class="card-sv"><SupervisorLine id={entry.data.supervisor} link={false} /></p>
+</article>
+<style>
+  .card { padding: var(--space-4) 0; border-bottom: 1px solid var(--color-border); }
+  .card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); font-size: var(--font-size-xs); color: var(--color-text-muted); }
+  .col { font-weight: 700; }
+  .col-news { color: var(--color-cat-news); } .col-guides { color: var(--color-cat-guides); }
+  .col-reviews { color: var(--color-cat-reviews); } .col-stock { color: var(--color-cat-stock); }
+  .card-title { font-size: var(--font-size-lg); margin: var(--space-2) 0; }
+  .card-title a, .card-title a:visited { color: var(--color-text); text-decoration: none; }
+  .card-title a:hover { text-decoration: underline; }
+  .card-desc { margin: 0; font-size: var(--font-size-sm); color: var(--color-text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .card-sv { margin: var(--space-2) 0 0; font-size: var(--font-size-xs); }
+</style>

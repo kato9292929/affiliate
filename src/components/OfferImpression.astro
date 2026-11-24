@@ -1,0 +1,8 @@
+---
+import type { Offer } from '../lib/site-data';
+interface Props { offer: Offer }
+const tag = Astro.props.offer.impressionTag;
+---
+{tag && (tag.trim().startsWith('<')
+  ? <Fragment set:html={tag} />
+  : <img src={tag} width="1" height="1" alt="" loading="lazy" style="border:0;position:absolute" />)}

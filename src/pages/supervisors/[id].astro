@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ArticleList from '../../components/ArticleList.astro';
+import { SUPERVISORS, type Supervisor } from '../../lib/site-data';
+import { getAllArticles } from '../../lib/content';
+export function getStaticPaths() {
+  return Object.values(SUPERVISORS).map((s) => ({ params: { id: s.id }, props: { s } }));
+}
+const { s } = Astro.props as { s: Supervisor };
+const items = (await getAllArticles()).filter((e) => e.data.supervisor === s.id).slice(0, 20);
+const jsonLd = [{
+  '@context': 'https://schema.org',
+  '@type': s.type === 'person' ? 'Person' : 'Organization',
+  name: s.name,
+  ...(s.url ? { url: s.url } : {}),
+  ...(s.specialties?.length ? { knowsAbout: s.specialties } : {}),
+}];
+---
+<BaseLayout title={`監修：${s.name}（${s.title}）`} description={s.scope ?? `${s.name}のプロフィール`} jsonLd={jsonLd} contentGroup="supervisor">
+  <Breadcrumbs slot="breadcrumbs" items={[{ label: '監修者', href: '/supervisors/' }, { label: `${s.name}（${s.title}）` }]} />
+  <h1 class="section-title">{s.name}</h1>
+  <dl class="profile">
+    <dt>肩書</dt><dd>{s.title}</dd>
+    {s.affiliation && <><dt>所属</dt><dd>{s.url ? <a href={s.url} rel="noopener">{s.affiliation}</a> : s.affiliation}</dd></>}
+    {s.specialties?.length && <><dt>専門領域</dt><dd>{s.specialties.join('、')}</dd></>}
+    {s.scope && <><dt>監修範囲</dt><dd>{s.scope}</dd></>}
+  </dl>
+  {s.notice && <p class="box notice">{s.notice}</p>}
+  <h2>監修した記事</h2>
+  <ArticleList items={items} showCollection ads={false} />
+</BaseLayout>
+<style>
+  .profile { display: grid; grid-template-columns: max-content 1fr; gap: var(--space-2) var(--space-4); }
+  dt { font-weight: 700; } dd { margin: 0; }
+</style>

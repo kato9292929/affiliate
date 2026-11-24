@@ -1,0 +1,10 @@
+---
+import ListPage from '../../../../components/ListPage.astro';
+import { tagPaths, type ListProps } from '../../../../lib/list-paths';
+export const getStaticPaths = () => tagPaths(false);
+const tag = Astro.params.tag!;
+const p = Astro.props as ListProps;
+---
+<ListPage title={`#${tag}`} description={`「${tag}」に関する記事の一覧。`}
+  crumbs={[{ label: 'タグ', href: '/tags/' }, { label: tag, href: `/tags/${encodeURIComponent(tag)}/` }, { label: `${p.current}ページ目` }]}
+  {...p} base={`/tags/${encodeURIComponent(tag)}/`} contentGroup="tag" showCollection />

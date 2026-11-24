@@ -1,0 +1,21 @@
+---
+interface Props { organization?: string; affectedCount?: string; leakedItems?: string[]; cause?: string }
+const { organization, affectedCount, leakedItems = [], cause } = Astro.props;
+const rows = [
+  ['発生企業・団体', organization],
+  ['件数', affectedCount],
+  ['漏えいした項目', leakedItems.join('、')],
+  ['原因', cause],
+].filter(([, v]) => v);
+---
+{rows.length > 0 && (
+  <section class="box news-summary" aria-label="ニュースの概要">
+    <h2>概要</h2>
+    <dl>{rows.map(([k, v]) => <><dt>{k}</dt><dd>{v}</dd></>)}</dl>
+  </section>
+)}
+<style>
+  dl { display: grid; grid-template-columns: max-content 1fr; gap: var(--space-2) var(--space-4); margin: 0; }
+  dt { font-weight: 700; } dd { margin: 0; }
+  @media (max-width: 480px) { dl { grid-template-columns: 1fr; gap: 0; } dd { margin-bottom: var(--space-2); } }
+</style>

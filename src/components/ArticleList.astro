@@ -1,0 +1,18 @@
+---
+import type { Article } from '../lib/content';
+import { ADS } from '../config/ads';
+import ArticleCard from './ArticleCard.astro';
+import AdSlot from './AdSlot.astro';
+interface Props { items: Article[]; showCollection?: boolean; ads?: boolean; level?: 2 | 3 }
+const { items, showCollection = false, ads = true, level = 3 } = Astro.props;
+---
+{items.length === 0 ? <p>記事はまだありません。</p> : (
+  <div class="article-list">
+    {items.map((e, i) => (
+      <>
+        <ArticleCard entry={e} showCollection={showCollection} level={level} />
+        {ads && (i + 1) % ADS.inListEvery === 0 && i < items.length - 1 && <AdSlot position="inList" />}
+      </>
+    ))}
+  </div>
+)}

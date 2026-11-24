@@ -1,0 +1,10 @@
+# 証券会社の定義。stock / guides / news の記事に tags: [broker:<キー>] を付けると、
+# /stock/broker/<キー>/ にその証券会社のセキュリティ設定・ニュース・案件がまとまる。
+#   name:   表示名
+#   offers: 証券会社ページに並べる案件（offers.yaml のid）
+sample:
+  name: サンプル証券
+  offers: [sample-broker]
+sample-b:
+  name: サンプル証券B
+  offers: [sample-broker-b]

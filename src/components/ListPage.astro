@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
+import ArticleList from './ArticleList.astro';
+import Pagination from './Pagination.astro';
+import type { Article } from '../lib/content';
+interface Props {
+  title: string;
+  description: string;
+  crumbs: { label: string; href?: string }[];
+  items: Article[];
+  current: number;
+  last: number;
+  base: string;
+  contentGroup: string;
+  showCollection?: boolean;
+}
+const p = Astro.props;
+const title = p.current > 1 ? `${p.title}（${p.current}ページ目）` : p.title;
+---
+<BaseLayout title={title} description={p.description} contentGroup={p.contentGroup}>
+  <Breadcrumbs slot="breadcrumbs" items={p.crumbs} />
+  <h1 class="section-title">{p.title}</h1>
+  <p class="lead">{p.description}</p>
+  <slot />
+  <ArticleList items={p.items} showCollection={p.showCollection} level={2} />
+  <Pagination current={p.current} last={p.last} base={p.base} />
+</BaseLayout>
+<style>.lead { color: var(--color-text-muted); font-size: var(--font-size-sm); }</style>
