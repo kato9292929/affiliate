@@ -68,4 +68,8 @@ src/data/banned-phrases.yaml   stock の禁止表現
 
 ## デプロイ
 
+本番ブランチは `main`（Vercel は `main` を本番、それ以外のブランチをプレビューとして扱う）。
+
+**本番公開ガード**：Vercel の本番デプロイ（`VERCEL_ENV=production`）では、`offers.yaml` に仮の案件（`sample-*`）が残っているか、`affiliate-programs.csv` の registration に「サンプル」が入っていると `check:offers` がエラーになり、ビルドが止まる。プレビューでは止まらない。手元で試すときは `PUBLISH_GUARD=1 pnpm check:offers`。
+
 Vercel（Framework: Astro、Build: `pnpm build`、Output: `dist`）。環境変数 `PUBLIC_SITE_URL` / `PUBLIC_GA4_ID` / `PUBLIC_ADSENSE_CLIENT` を設定する。

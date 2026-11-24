@@ -81,6 +81,15 @@ for (const c of cases) {
   if (!ok) { failed++; console.log(r.stderr); }
   rmSync(root, { recursive: true, force: true });
 }
+// 本番公開ガード：仮データが残っていれば本番では止まる
+{
+  const { root } = sandbox();
+  const r = spawnSync(process.execPath, [join(repo, 'scripts', 'check-offers.mjs')], { env: { ...process.env, DATA_ROOT: root, PUBLISH_GUARD: '1' }, encoding: 'utf8' });
+  const ok = r.status !== 0 && r.stderr.includes('本番公開ガード');
+  console.log(`${ok ? 'ok  ' : 'FAIL'} 検出: 本番で仮の案件・仮の登録番号が残っている`);
+  if (!ok) { failed++; console.log(r.stdout, r.stderr); }
+  rmSync(root, { recursive: true, force: true });
+}
 // 禁止表現
 {
   const { root, w } = sandbox();

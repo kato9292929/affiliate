@@ -93,6 +93,17 @@ try {
   errors.push(`${PATHS.brokers}: ${e.message}`);
 }
 
+// 本番公開ガード：仮の案件（sample-*）や「サンプル」の登録番号が残ったまま本番に出さない。
+// Vercel の本番デプロイ（VERCEL_ENV=production）か PUBLISH_GUARD=1 のときだけ有効。プレビューでは通す。
+if (process.env.VERCEL_ENV === 'production' || process.env.PUBLISH_GUARD === '1') {
+  for (const id of Object.keys(offers)) {
+    if (id.startsWith('sample-')) errors.push(`本番公開ガード: 仮の案件 "${id}" が ${PATHS.offers} に残っています（42件の取り込み後に削除し、記事の参照も付け替える）`);
+  }
+  for (const [id, row] of programs) {
+    if (/サンプル|sample/i.test(row.registration)) errors.push(`本番公開ガード: ${PATHS.programs} の "${id}" の registration が仮の値です: ${row.registration}`);
+  }
+}
+
 for (const w of warnings) console.warn(`warning: ${w}`);
 if (errors.length) {
   for (const e of errors) console.error(`error: ${e}`);
