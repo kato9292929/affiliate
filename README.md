@@ -8,6 +8,7 @@ x402 Inc. が運営するセキュリティニュースメディア。Astro の�
 |---|---|
 | `pnpm dev` | 開発サーバー |
 | `pnpm build` | `check:offers` → `astro build` → Pagefind の検索インデックス生成 |
+| `pnpm build:sample` | 仮データのままのビルド（手元確認用。本番公開ガードを外す） |
 | `pnpm check:offers` | 案件データと記事の参照を検査（エラーなら終了コード1） |
 | `pnpm check:content` | stock の記事の禁止表現を警告（`--strict` で終了コード1） |
 | `pnpm test:checks` | 上の2つがダミーの不正データを検出できるかのテスト |
@@ -70,6 +71,6 @@ src/data/banned-phrases.yaml   stock の禁止表現
 
 本番ブランチは `main`（Vercel は `main` を本番、それ以外のブランチをプレビューとして扱う）。
 
-**本番公開ガード**：Vercel の本番デプロイ（`VERCEL_ENV=production`）では、`offers.yaml` に仮の案件（`sample-*`）が残っているか、`affiliate-programs.csv` の registration に「サンプル」が入っていると `check:offers` がエラーになり、ビルドが止まる。プレビューでは止まらない。手元で試すときは `PUBLISH_GUARD=1 pnpm check:offers`。
+**本番公開ガード**：`offers.yaml` に仮の案件（`sample-*`）が残っているか、`affiliate-programs.csv` の registration に「サンプル」が入っていると、`check:offers` がエラーになりビルドが止まる。安全側に倒しており、止まらないのは `VERCEL_ENV` が `preview` / `development` のときだけ。`VERCEL_ENV` が空のとき（Vercel の「Enable access to System Environment Variables」がオフ、または手元のビルド）は本番として扱う。手元で仮データのままビルドを確かめるときは `pnpm build:sample`（`ALLOW_SAMPLE_DATA=1`。`VERCEL_ENV=production` では無視される）。Vercel の環境変数に `ALLOW_SAMPLE_DATA` は設定しないこと。
 
 Vercel（Framework: Astro、Build: `pnpm build`、Output: `dist`）。環境変数 `PUBLIC_SITE_URL` / `PUBLIC_GA4_ID` / `PUBLIC_ADSENSE_CLIENT` を設定する。

@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "pnpm check:offers && astro build && pagefind --site dist",
+    "build:sample": "ALLOW_SAMPLE_DATA=1 pnpm build",
     "preview": "astro preview",
     "check:offers": "node scripts/check-offers.mjs",
     "check:content": "node scripts/check-content.mjs",

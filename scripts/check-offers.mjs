@@ -94,8 +94,15 @@ try {
 }
 
 // 本番公開ガード：仮の案件（sample-*）や「サンプル」の登録番号が残ったまま本番に出さない。
-// Vercel の本番デプロイ（VERCEL_ENV=production）か PUBLISH_GUARD=1 のときだけ有効。プレビューでは通す。
-if (process.env.VERCEL_ENV === 'production' || process.env.PUBLISH_GUARD === '1') {
+// 安全側に倒す：VERCEL_ENV が preview / development のときだけ止めない。
+// VERCEL_ENV が空（Vercel の「Enable access to System Environment Variables」がオフ、または手元のビルド）は本番として扱う。
+// 手元で仮データのままビルドを確かめるときだけ ALLOW_SAMPLE_DATA=1（VERCEL_ENV=production では無視する）。
+const vercelEnv = (process.env.VERCEL_ENV ?? '').trim();
+const guardOn =
+  process.env.PUBLISH_GUARD === '1' ||
+  vercelEnv === 'production' ||
+  (!['preview', 'development'].includes(vercelEnv) && process.env.ALLOW_SAMPLE_DATA !== '1');
+if (guardOn) {
   for (const id of Object.keys(offers)) {
     if (id.startsWith('sample-')) errors.push(`本番公開ガード: 仮の案件 "${id}" が ${PATHS.offers} に残っています（42件の取り込み後に削除し、記事の参照も付け替える）`);
   }
@@ -110,5 +117,6 @@ if (errors.length) {
   console.error(`\ncheck:offers: ${errors.length} 件のエラー`);
   process.exit(1);
 }
+if (!guardOn) console.warn(`warning: 本番公開ガードは無効です（VERCEL_ENV=${vercelEnv || '空'}${process.env.ALLOW_SAMPLE_DATA === '1' ? ', ALLOW_SAMPLE_DATA=1' : ''}）`);
 const activeCount = Object.values(offers).filter((o) => o.active).length;
 console.log(`check:offers: OK（案件 ${Object.keys(offers).length} 件 / active ${activeCount} 件 / 台帳 ${programs.size} 行）`);

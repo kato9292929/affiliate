@@ -43,7 +43,9 @@ const cases = [
 ];
 
 let failed = 0;
-const run = (script, root) => spawnSync(process.execPath, [join(repo, 'scripts', script)], { env: { ...process.env, DATA_ROOT: root }, encoding: 'utf8' });
+// ガード以外のケースはプレビュー扱いで走らせる（ガードは下で個別に確かめる）
+const baseEnv = { ...process.env, VERCEL_ENV: 'preview', ALLOW_SAMPLE_DATA: '', PUBLISH_GUARD: '' };
+const run = (script, root, env = {}) => spawnSync(process.execPath, [join(repo, 'scripts', script)], { env: { ...baseEnv, DATA_ROOT: root, ...env }, encoding: 'utf8' });
 
 function sandbox() {
   const root = mkdtempSync(join(tmpdir(), 'check-'));
@@ -81,12 +83,19 @@ for (const c of cases) {
   if (!ok) { failed++; console.log(r.stderr); }
   rmSync(root, { recursive: true, force: true });
 }
-// 本番公開ガード：仮データが残っていれば本番では止まる
-{
+// 本番公開ガード：仮データが残っていれば止まる／止まらない条件
+for (const [label, env, shouldFail] of [
+  ['VERCEL_ENV=production で止まる', { VERCEL_ENV: 'production' }, true],
+  ['VERCEL_ENV が空（システム環境変数オフ・手元）で止まる', { VERCEL_ENV: '' }, true],
+  ['VERCEL_ENV が想定外の値で止まる', { VERCEL_ENV: 'prod' }, true],
+  ['production では ALLOW_SAMPLE_DATA=1 を無視して止まる', { VERCEL_ENV: 'production', ALLOW_SAMPLE_DATA: '1' }, true],
+  ['VERCEL_ENV=preview では通る', { VERCEL_ENV: 'preview' }, false],
+  ['VERCEL_ENV が空でも ALLOW_SAMPLE_DATA=1 なら通る', { VERCEL_ENV: '', ALLOW_SAMPLE_DATA: '1' }, false],
+]) {
   const { root } = sandbox();
-  const r = spawnSync(process.execPath, [join(repo, 'scripts', 'check-offers.mjs')], { env: { ...process.env, DATA_ROOT: root, PUBLISH_GUARD: '1' }, encoding: 'utf8' });
-  const ok = r.status !== 0 && r.stderr.includes('本番公開ガード');
-  console.log(`${ok ? 'ok  ' : 'FAIL'} 検出: 本番で仮の案件・仮の登録番号が残っている`);
+  const r = run('check-offers.mjs', root, env);
+  const ok = shouldFail ? r.status !== 0 && r.stderr.includes('本番公開ガード') : r.status === 0;
+  console.log(`${ok ? 'ok  ' : 'FAIL'} ガード: ${label}`);
   if (!ok) { failed++; console.log(r.stdout, r.stderr); }
   rmSync(root, { recursive: true, force: true });
 }
