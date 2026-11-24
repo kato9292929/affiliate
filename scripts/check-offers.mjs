@@ -8,6 +8,8 @@ import {
 } from '../src/lib/data.mjs';
 
 const errors = [];
+/** 登録番号は affiliate-programs.csv の registration 列だけが正。ほかのデータファイルに書かせない */
+const isRegistrationKey = (k) => /^(registration|registration_?number|登録番号)$/i.test(k);
 const warnings = [];
 
 const { offers, errors: offerErrors, warnings: offerWarnings } = loadOffers();
@@ -41,6 +43,10 @@ for (const key of listComparisonKeys()) {
     continue;
   }
   if (!data?.infoDate) errors.push(`${where}: infoDate（情報基準日）がありません`);
+  (data?.rows ?? []).forEach((r, i) => {
+    const keys = [...Object.keys(r ?? {}), ...Object.keys(r?.values ?? {})];
+    if (keys.some(isRegistrationKey)) errors.push(`${where}: rows[${i}] に登録番号の欄があります（登録番号は ${PATHS.programs} の registration 列だけに書く）`);
+  });
   const ids = (data?.rows ?? []).map((r) => r?.offer).filter(Boolean);
   for (const id of ids) if (!exists(id)) errors.push(`${where}: offers.yaml に無い id "${id}" を参照しています`);
   comparisonOffers.set(key, ids);
@@ -83,6 +89,9 @@ for (const collection of ARTICLE_COLLECTIONS) {
 try {
   const brokers = readYamlFile(PATHS.brokers);
   for (const [key, b] of Object.entries(brokers ?? {})) {
+    if (Object.keys(b ?? {}).some(isRegistrationKey)) {
+      errors.push(`${PATHS.brokers} [${key}]: 登録番号の欄があります（登録番号は ${PATHS.programs} の registration 列だけに書く）`);
+    }
     for (const id of b?.offers ?? []) {
       const where = `${PATHS.brokers} [${key}]`;
       if (!exists(id)) errors.push(`${where}: offers.yaml に無い id "${id}" を参照しています`);

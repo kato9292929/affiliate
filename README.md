@@ -41,6 +41,8 @@ src/data/banned-phrases.yaml   stock の禁止表現
 
 `affiliate-programs.csv` はリポジトリの `data/` に置く。列名は `id`（または `offer_id`）と `registration`（または `登録番号`）を読む。報酬・条件の列はサイトには一切出さない。
 
+登録番号はこの CSV の registration 列だけに書く。比較表・証券会社ページは表示のたびに案件 id で CSV から引く。`brokers.yaml` や `src/data/comparisons/*.yaml` に登録番号の欄を書くと `check:offers` がエラーにする（2か所に入ってずれるのを防ぐため）。
+
 ### Muse の運用（offers.yaml と affiliate-programs.csv だけを触る）
 
 - 追加：`offers.yaml` に1件足し、`affiliate-programs.csv` に同じ id の行を足す

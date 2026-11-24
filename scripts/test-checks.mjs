@@ -42,6 +42,8 @@ const cases = [
       w(STOCK, article(['zz-not-in-csv']));
     },
   },
+  { name: 'brokers.yaml に登録番号を書き写した', expect: '登録番号の欄', setup: (w, a) => a('src/data/brokers.yaml', `\nzz-broker:\n  name: x\n  registration: 関東財務局長（金商）第1号\n  offers: []\n`) },
+  { name: '比較表データに登録番号を書き写した', expect: '登録番号の欄', setup: (w) => w('src/data/comparisons/zz.yaml', `title: x\ninfoDate: "2026-11-01"\nrows:\n  - offer: ${EXISTING}\n    registration: 関東財務局長（金商）第1号\n`) },
 ];
 
 let failed = 0;

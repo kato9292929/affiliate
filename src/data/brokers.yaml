@@ -2,6 +2,8 @@
 # /stock/broker/<キー>/ にその証券会社のセキュリティ設定・ニュース・案件がまとまる。
 #   name:   表示名
 #   offers: 証券会社ページに並べる案件（offers.yaml のid）
+# 登録番号はここに書かない（affiliate-programs.csv の registration 列が正。書くと check:offers がエラーにする）。
+# 多要素認証・パスキー対応などのセキュリティ設定は src/data/comparisons/*.yaml の比較表データに書く。
 sample:
   name: サンプル証券
   offers: [sample-broker]
