@@ -104,7 +104,7 @@ const guardOn =
   (!['preview', 'development'].includes(vercelEnv) && process.env.ALLOW_SAMPLE_DATA !== '1');
 if (guardOn) {
   for (const id of Object.keys(offers)) {
-    if (id.startsWith('sample-')) errors.push(`本番公開ガード: 仮の案件 "${id}" が ${PATHS.offers} に残っています（42件の取り込み後に削除し、記事の参照も付け替える）`);
+    if (id.startsWith('sample-')) errors.push(`本番公開ガード: 仮の案件 "${id}" が ${PATHS.offers} に残っています（affiliate-programs.csv の登録番号を入れた実在の案件に付け替えて削除する）`);
   }
   for (const [id, row] of programs) {
     if (/サンプル|sample/i.test(row.registration)) errors.push(`本番公開ガード: ${PATHS.programs} の "${id}" の registration が仮の値です: ${row.registration}`);

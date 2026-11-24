@@ -9,24 +9,11 @@
 #     active: false
 # 案件が終了したら削除せず active: false に戻す（記事は公式リンクに切り替わる）。
 #
-# ※ 以下の sample-* は初期データ（offers-additions.yaml の42件）を受け取るまでの仮置き。
-#   `pnpm import:offers <offers-additions.yaml>` で42件を取り込む。
+# ※ sample-broker / sample-broker-b は、株式のサンプル記事・比較表の動作確認用の仮置き。
+#   affiliate-programs.csv（登録番号）を受け取ったら、実在の証券会社の id に付け替えて削除する。
+#   残っている間は本番ビルドが止まる（本番公開ガード）。
 
-sample-edr:
-  name: サンプルEDR（法人向け）
-  asp: a8
-  url: ""
-  fallbackUrl: https://example.com/edr
-  impressionTag: ""
-  active: false
 
-sample-password-manager:
-  name: サンプルパスワード管理（個人向け）
-  asp: moshimo
-  url: ""
-  fallbackUrl: https://example.com/password-manager
-  impressionTag: ""
-  active: false
 
 sample-broker:
   name: サンプル証券
@@ -42,4 +29,342 @@ sample-broker-b:
   url: ""
   fallbackUrl: https://example.com/broker-b
   impressionTag: ""
+  active: false
+
+# ---- offers-additions.yaml から取り込み（2026-11-24） ----
+
+norton-360-a8:
+  name: ノートン 360
+  asp: a8
+  url: ''
+  fallbackUrl: https://jp.norton.com/
+  impressionTag: ''
+  active: false
+
+virus-buster-a8:
+  name: ウイルスバスター
+  asp: a8
+  url: ''
+  fallbackUrl: https://www.trendmicro.com/ja_jp/
+  impressionTag: ''
+  active: false
+
+eset-home-a8:
+  name: ESET HOME セキュリティ
+  asp: a8
+  url: ''
+  fallbackUrl: https://www.eset.com/jp/
+  impressionTag: ''
+  active: false
+
+kaspersky-direct:
+  name: カスペルスキー
+  asp: direct
+  url: ''
+  fallbackUrl: https://www.kaspersky.co.jp/
+  impressionTag: ''
+  active: false
+
+sourcenext-moshimo:
+  name: ソースネクスト（ZERO ウイルスセキュリティ等）
+  asp: moshimo
+  url: ''
+  fallbackUrl: https://www.sourcenext.com/
+  impressionTag: ''
+  active: false
+
+malwarebytes-partnerize:
+  name: Malwarebytes
+  asp: direct
+  url: ''
+  fallbackUrl: https://www.malwarebytes.com/
+  impressionTag: ''
+  active: false
+
+eset-cj:
+  name: ESET Online Affiliates
+  asp: direct
+  url: ''
+  fallbackUrl: https://www.eset.com/
+  impressionTag: ''
+  active: false
+
+security-software-amazon:
+  name: セキュリティソフト全般（ダウンロード版・パッケージ版）
+  asp: amazon
+  url: ''
+  fallbackUrl: https://www.amazon.co.jp/
+  impressionTag: ''
+  active: false
+
+security-software-rakuten:
+  name: セキュリティソフト全般（楽天市場販売分）
+  asp: rakuten
+  url: ''
+  fallbackUrl: https://www.rakuten.co.jp/
+  impressionTag: ''
+  active: false
+
+nordvpn-a8:
+  name: NordVPN
+  asp: a8
+  url: ''
+  fallbackUrl: https://nordvpn.com/
+  impressionTag: ''
+  active: false
+
+nordvpn-direct:
+  name: NordVPN
+  asp: direct
+  url: ''
+  fallbackUrl: https://nordvpn.com/
+  impressionTag: ''
+  active: false
+
+expressvpn-a8:
+  name: ExpressVPN
+  asp: a8
+  url: ''
+  fallbackUrl: https://www.expressvpn.com/
+  impressionTag: ''
+  active: false
+
+expressvpn-direct:
+  name: ExpressVPN
+  asp: direct
+  url: ''
+  fallbackUrl: https://www.expressvpn.com/
+  impressionTag: ''
+  active: false
+
+surfshark-a8:
+  name: Surfshark
+  asp: a8
+  url: ''
+  fallbackUrl: https://surfshark.com/
+  impressionTag: ''
+  active: false
+
+surfshark-direct:
+  name: Surfshark
+  asp: direct
+  url: ''
+  fallbackUrl: https://surfshark.com/
+  impressionTag: ''
+  active: false
+
+millenvpn-a8:
+  name: MillenVPN
+  asp: a8
+  url: ''
+  fallbackUrl: https://millenvpn.jp/
+  impressionTag: ''
+  active: false
+
+millenvpn-accesstrade:
+  name: MillenVPN
+  asp: accesstrade
+  url: ''
+  fallbackUrl: https://millenvpn.jp/
+  impressionTag: ''
+  active: false
+
+millenvpn-afb:
+  name: MillenVPN
+  asp: afb
+  url: ''
+  fallbackUrl: https://millenvpn.jp/
+  impressionTag: ''
+  active: false
+
+sekai-vpn-a8:
+  name: セカイVPN
+  asp: a8
+  url: ''
+  fallbackUrl: https://www.interlink.or.jp/
+  impressionTag: ''
+  active: false
+
+sekai-vpn-valuecommerce:
+  name: セカイVPN
+  asp: valuecommerce
+  url: ''
+  fallbackUrl: https://www.interlink.or.jp/
+  impressionTag: ''
+  active: false
+
+myip-a8:
+  name: マイIP／マイIP ソフトイーサ版
+  asp: a8
+  url: ''
+  fallbackUrl: https://www.interlink.or.jp/
+  impressionTag: ''
+  active: false
+
+proton-vpn-direct:
+  name: Proton VPN
+  asp: direct
+  url: ''
+  fallbackUrl: https://proton.me/
+  impressionTag: ''
+  active: false
+
+1password-direct:
+  name: 1Password
+  asp: direct
+  url: ''
+  fallbackUrl: https://1password.com/
+  impressionTag: ''
+  active: false
+
+lastpass-direct:
+  name: LastPass
+  asp: direct
+  url: ''
+  fallbackUrl: https://www.lastpass.com/
+  impressionTag: ''
+  active: false
+
+proton-pass-direct:
+  name: Proton Pass
+  asp: direct
+  url: ''
+  fallbackUrl: https://proton.me/
+  impressionTag: ''
+  active: false
+
+keeper-partnerstack:
+  name: Keeper
+  asp: direct
+  url: ''
+  fallbackUrl: https://www.keepersecurity.com/
+  impressionTag: ''
+  active: false
+
+idrive-direct:
+  name: IDrive
+  asp: direct
+  url: ''
+  fallbackUrl: https://www.idrive.com/
+  impressionTag: ''
+  active: false
+
+acronis-referral:
+  name: Acronis Referral Program
+  asp: direct
+  url: ''
+  fallbackUrl: https://www.acronis.com/
+  impressionTag: ''
+  active: false
+
+crowdstrike-partnerstack:
+  name: CrowdStrike Falcon（SMB向け）
+  asp: direct
+  url: ''
+  fallbackUrl: https://www.crowdstrike.com/
+  impressionTag: ''
+  active: false
+
+code-rakuda-direct:
+  name: Code診断ラクダ（Webサービスリスク・脆弱性診断）
+  asp: direct
+  url: ''
+  fallbackUrl: https://code-rakuda.com/
+  impressionTag: ''
+  active: false
+
+sbi-sec-a8:
+  name: SBI証券
+  asp: a8
+  url: ''
+  fallbackUrl: https://www.sbisec.co.jp/
+  impressionTag: ''
+  active: false
+
+rakuten-sec-a8:
+  name: 楽天証券
+  asp: a8
+  url: ''
+  fallbackUrl: https://www.rakuten-sec.co.jp/
+  impressionTag: ''
+  active: false
+
+monex-sec:
+  name: マネックス証券
+  asp: accesstrade
+  url: ''
+  fallbackUrl: https://www.monex.co.jp/
+  impressionTag: ''
+  active: false
+
+matsui-sec:
+  name: 松井証券
+  asp: accesstrade
+  url: ''
+  fallbackUrl: https://www.matsui.co.jp/
+  impressionTag: ''
+  active: false
+
+mufg-esmart-sec-a8:
+  name: 三菱UFJ eスマート証券
+  asp: a8
+  url: ''
+  fallbackUrl: https://kabu.com/
+  impressionTag: ''
+  active: false
+
+gmo-click-sec:
+  name: GMOクリック証券
+  asp: accesstrade
+  url: ''
+  fallbackUrl: https://www.click-sec.com/
+  impressionTag: ''
+  active: false
+
+dmm-sec:
+  name: DMM.com証券（DMM株）
+  asp: accesstrade
+  url: ''
+  fallbackUrl: https://kabu.dmm.com/
+  impressionTag: ''
+  active: false
+
+moomoo-sec-accesstrade:
+  name: moomoo証券
+  asp: accesstrade
+  url: ''
+  fallbackUrl: https://www.moomoo.com/jp
+  impressionTag: ''
+  active: false
+
+iwai-cosmo-sec:
+  name: 岩井コスモ証券
+  asp: accesstrade
+  url: ''
+  fallbackUrl: https://www.iwaicosmo.co.jp/
+  impressionTag: ''
+  active: false
+
+ferci-monex:
+  name: ferci（フェルシー）
+  asp: accesstrade
+  url: ''
+  fallbackUrl: https://www.monex.co.jp/
+  impressionTag: ''
+  active: false
+
+kabu-evangelist:
+  name: 株エヴァンジェリスト
+  asp: accesstrade
+  url: ''
+  fallbackUrl: https://www.kabuevangelist.com/
+  impressionTag: ''
+  active: false
+
+okta-refer:
+  name: Okta（Okta Partner Connect / Refer）
+  asp: direct
+  url: ''
+  fallbackUrl: https://www.okta.com/jp/
+  impressionTag: ''
   active: false

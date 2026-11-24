@@ -12,13 +12,15 @@ const OFFERS = 'src/data/offers.yaml';
 const CSV = 'data/affiliate-programs.csv';
 const REVIEW = 'src/content/reviews/zz-dummy.md';
 const STOCK = 'src/content/stock/zz-dummy.md';
+// テストで使う既存の案件 id（offers.yaml の先頭のもの）
+const EXISTING = /^([a-z0-9][a-z0-9_-]*):/im.exec(readFileSync(join(repo, OFFERS), 'utf8').replace(/^#.*$/gm, ''))[1];
 const article = (offers, body = '') =>
   `---\ntitle: dummy\ndescription: dummy\ncategory: x\npublishedAt: 2026-01-01\nsupervisor: x402\noffers: [${offers.join(', ')}]\n---\n${body}\n`;
 
 const cases = [
   { name: '存在しない id の参照', expect: '"no-such-offer"', setup: (w) => w(REVIEW, article(['no-such-offer'])) },
   { name: '本文の <Offer> が存在しない id', expect: '"ghost"', setup: (w) => w(REVIEW, article([], '<Offer id="ghost" />')) },
-  { name: 'id の重複', expect: '重複', setup: (w, a) => a(OFFERS, `\nsample-edr:\n  name: dup\n  asp: a8\n  url: ""\n  fallbackUrl: https://example.com\n  impressionTag: ""\n  active: false\n`) },
+  { name: 'id の重複', expect: '重複', setup: (w, a) => a(OFFERS, `\n${EXISTING}:\n  name: dup\n  asp: a8\n  url: ""\n  fallbackUrl: https://example.com\n  impressionTag: ""\n  active: false\n`) },
   { name: 'active: true なのに url が空', expect: 'url が空', setup: (w, a) => a(OFFERS, `\nzz-active-empty:\n  name: x\n  asp: a8\n  url: ""\n  fallbackUrl: https://example.com\n  impressionTag: ""\n  active: true\n`) },
   { name: 'fallbackUrl がURLでない', expect: 'fallbackUrl', setup: (w, a) => a(OFFERS, `\nzz-bad-url:\n  name: x\n  asp: a8\n  url: ""\n  fallbackUrl: example.com/no-scheme\n  impressionTag: ""\n  active: false\n`) },
   { name: 'asp がスキーマ外', expect: 'asp', setup: (w, a) => a(OFFERS, `\nzz-bad-asp:\n  name: x\n  asp: unknown-asp\n  url: ""\n  fallbackUrl: https://example.com\n  impressionTag: ""\n  active: false\n`) },
@@ -76,7 +78,7 @@ for (const c of cases) {
 // active: false の案件を参照してもビルド（検査）は通る
 {
   const { root, w } = sandbox();
-  w(REVIEW, article(['sample-edr'], '<Offer id="sample-edr" />'));
+  w(REVIEW, article([EXISTING], `<Offer id="${EXISTING}" />`));
   const r = run('check-offers.mjs', root);
   const ok = r.status === 0;
   console.log(`${ok ? 'ok  ' : 'FAIL'} active: false の案件の参照は通る`);

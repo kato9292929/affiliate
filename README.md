@@ -57,9 +57,9 @@ src/data/banned-phrases.yaml   stock の禁止表現
 本文で使えるコンポーネント（import 不要、`.mdx` で使う）：
 
 ```mdx
-<Offer id="sample-edr" />                  テキストリンク
-<Offer id="sample-edr">リンク文言</Offer>
-<OfferButton id="sample-edr" label="..." />  ボタン
+<Offer id="crowdstrike-partnerstack" />                  テキストリンク
+<Offer id="crowdstrike-partnerstack">リンク文言</Offer>
+<OfferButton id="crowdstrike-partnerstack" label="..." />  ボタン
 <ComparisonTable data="broker-security" />   比較表（登録番号・情報基準日の列は必ず出る）
 ```
 
