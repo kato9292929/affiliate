@@ -8,28 +8,6 @@
 #     impressionTag: ""
 #     active: false
 # 案件が終了したら削除せず active: false に戻す（記事は公式リンクに切り替わる）。
-#
-# ※ sample-broker / sample-broker-b は、株式のサンプル記事・比較表の動作確認用の仮置き。
-#   affiliate-programs.csv（登録番号）を受け取ったら、実在の証券会社の id に付け替えて削除する。
-#   残っている間は本番ビルドが止まる（本番公開ガード）。
-
-
-
-sample-broker:
-  name: サンプル証券
-  asp: a8
-  url: ""
-  fallbackUrl: https://example.com/broker
-  impressionTag: ""
-  active: false
-
-sample-broker-b:
-  name: サンプル証券B
-  asp: accesstrade
-  url: ""
-  fallbackUrl: https://example.com/broker-b
-  impressionTag: ""
-  active: false
 
 # ---- offers-additions.yaml から取り込み（2026-11-24） ----
 

@@ -4,9 +4,30 @@
 #   offers: 証券会社ページに並べる案件（offers.yaml のid）
 # 登録番号はここに書かない（affiliate-programs.csv の registration 列が正。書くと check:offers がエラーにする）。
 # 多要素認証・パスキー対応などのセキュリティ設定は src/data/comparisons/*.yaml の比較表データに書く。
-sample:
-  name: サンプル証券
-  offers: [sample-broker]
-sample-b:
-  name: サンプル証券B
-  offers: [sample-broker-b]
+sbi:
+  name: SBI証券
+  offers: [sbi-sec-a8]
+rakuten:
+  name: 楽天証券
+  offers: [rakuten-sec-a8]
+monex:
+  name: マネックス証券
+  offers: [monex-sec]
+matsui:
+  name: 松井証券
+  offers: [matsui-sec]
+mufg-esmart:
+  name: 三菱UFJ eスマート証券
+  offers: [mufg-esmart-sec-a8]
+gmo-click:
+  name: GMOクリック証券
+  offers: [gmo-click-sec]
+dmm:
+  name: DMM.com証券（DMM株）
+  offers: [dmm-sec]
+moomoo:
+  name: moomoo証券
+  offers: [moomoo-sec-accesstrade]
+iwai-cosmo:
+  name: 岩井コスモ証券
+  offers: [iwai-cosmo-sec]

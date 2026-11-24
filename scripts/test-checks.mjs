@@ -14,6 +14,9 @@ const REVIEW = 'src/content/reviews/zz-dummy.md';
 const STOCK = 'src/content/stock/zz-dummy.md';
 // テストで使う既存の案件 id（offers.yaml の先頭のもの）
 const EXISTING = /^([a-z0-9][a-z0-9_-]*):/im.exec(readFileSync(join(repo, OFFERS), 'utf8').replace(/^#.*$/gm, ''))[1];
+// 台帳の列構成に合わせて1行を作る（id と registration 以外は空）
+const csvHeader = readFileSync(join(repo, CSV), 'utf8').replace(/^\uFEFF/, '').split(/\r?\n/)[0].split(',');
+const csvRow = (id, registration = '') => `${csvHeader.map((c) => (c === 'id' ? id : c === 'registration' ? registration : '')).join(',')}\n`;
 const article = (offers, body = '') =>
   `---\ntitle: dummy\ndescription: dummy\ncategory: x\npublishedAt: 2026-01-01\nsupervisor: x402\noffers: [${offers.join(', ')}]\n---\n${body}\n`;
 
@@ -30,7 +33,7 @@ const cases = [
     expect: 'registration',
     setup: (w, a) => {
       a(OFFERS, `\nzz-no-reg:\n  name: x\n  asp: a8\n  url: ""\n  fallbackUrl: https://example.com\n  impressionTag: ""\n  active: false\n`);
-      a(CSV, `zz-no-reg,x,a8,stock,,,,,\n`);
+      a(CSV, csvRow('zz-no-reg'));
       w(STOCK, article(['zz-no-reg']));
     },
   },
@@ -62,8 +65,8 @@ function sandbox() {
 // 正常系
 {
   const { root } = sandbox();
-  const r = run('check-offers.mjs', root);
-  console.log(`${r.status === 0 ? 'ok  ' : 'FAIL'} 現在のデータは通る`);
+  const r = run('check-offers.mjs', root, { VERCEL_ENV: 'production' });
+  console.log(`${r.status === 0 ? 'ok  ' : 'FAIL'} 現在のデータは本番でも通る`);
   if (r.status !== 0) { failed++; console.log(r.stderr); }
   rmSync(root, { recursive: true, force: true });
 }
@@ -87,7 +90,7 @@ for (const c of cases) {
   if (!ok) { failed++; console.log(r.stderr); }
   rmSync(root, { recursive: true, force: true });
 }
-// 本番公開ガード：仮データが残っていれば止まる／止まらない条件
+// 本番公開ガード：仮データ（sample-* と「サンプル」の登録番号）を入れて、止まる／止まらない条件を確かめる
 for (const [label, env, shouldFail] of [
   ['VERCEL_ENV=production で止まる', { VERCEL_ENV: 'production' }, true],
   ['VERCEL_ENV が空（システム環境変数オフ・手元）で止まる', { VERCEL_ENV: '' }, true],
@@ -96,7 +99,9 @@ for (const [label, env, shouldFail] of [
   ['VERCEL_ENV=preview では通る', { VERCEL_ENV: 'preview' }, false],
   ['VERCEL_ENV が空でも ALLOW_SAMPLE_DATA=1 なら通る', { VERCEL_ENV: '', ALLOW_SAMPLE_DATA: '1' }, false],
 ]) {
-  const { root } = sandbox();
+  const { root, a } = sandbox();
+  a(OFFERS, `\nsample-broker:\n  name: x\n  asp: a8\n  url: ""\n  fallbackUrl: https://example.com\n  impressionTag: ""\n  active: false\n`);
+  a(CSV, csvRow('sample-broker', '関東財務局長（金商）第00000号（サンプル）'));
   const r = run('check-offers.mjs', root, env);
   const ok = shouldFail ? r.status !== 0 && r.stderr.includes('本番公開ガード') : r.status === 0;
   console.log(`${ok ? 'ok  ' : 'FAIL'} ガード: ${label}`);
